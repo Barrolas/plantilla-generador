@@ -1,11 +1,8 @@
-# Sistema de Nivelación de Recursos (SNR) v2.0
+# Sistema de Nivelación de Recursos (SNR) v3.0
 
 ## 🎮 **Descripción**
 
-Sistema de Nivelación de Recursos (SNR) es un juego incremental/clicker que simula la gestión de recursos en una cadena de producción industrial. El proyecto incluye **dos implementaciones**:
-
-- **Versión Vanilla**: HTML + CSS + JavaScript puro
-- **Versión React**: React + Custom Hooks + Vite
+Sistema de Nivelación de Recursos (SNR) es un juego incremental/clicker que simula la gestión de recursos en una cadena de producción industrial. El proyecto está implementado en **React** con Custom Hooks y Vite para máxima reactividad y performance.
 
 ## 🚀 **Características Principales**
 
@@ -15,6 +12,7 @@ Sistema de Nivelación de Recursos (SNR) es un juego incremental/clicker que sim
 - ✅ **Sistema de Instalaciones**: 3 tipos de mejoras con efectos específicos
 - ✅ **Logros**: Sistema de achievements con condiciones dinámicas
 - ✅ **Guardado Automático**: Persistencia de datos en localStorage
+- ✅ **Reactividad Nativa**: Actualizaciones en tiempo real sin recargas
 
 ### **Instalaciones Disponibles**
 1. **Fábrica de Producción**: Aumenta la producción de MP por segundo
@@ -25,60 +23,41 @@ Sistema de Nivelación de Recursos (SNR) es un juego incremental/clicker que sim
 
 ```
 plantilla-generador/
-├── index.html              # Versión Vanilla - Página principal
-├── css/style.css           # Versión Vanilla - Estilos
-├── js/game.js             # Versión Vanilla - Lógica del juego
-├── config.js              # Versión Vanilla - Configuración
-├── react-version/         # Versión React - Carpeta completa
-│   ├── package.json       # Dependencias React
-│   ├── vite.config.js     # Configuración Vite
-│   ├── index.html         # Template HTML React
-│   └── src/
-│       ├── main.jsx       # Punto de entrada React
-│       ├── App.jsx        # Componente principal
-│       ├── App.css        # Estilos específicos React
-│       ├── index.css      # Estilos globales React
-│       ├── hooks/
-│       │   └── useGameState.js  # Hook personalizado
-│       ├── utils/
-│       │   └── config.js        # Configuración React
-│       └── components/          # Componentes (futuro)
-└── README.md              # Este archivo
+├── package.json              # Dependencias React
+├── vite.config.js            # Configuración Vite
+├── index.html                # Template HTML React
+├── src/
+│   ├── main.jsx             # Punto de entrada React
+│   ├── App.jsx              # Componente principal
+│   ├── App.css              # Estilos específicos React
+│   ├── index.css            # Estilos globales
+│   ├── hooks/
+│   │   └── useGameState.js  # Hook personalizado del juego
+│   └── utils/
+│       └── config.js        # Configuración del juego
+└── README.md                # Este archivo
 ```
 
-## 🎯 **Versiones Disponibles**
+## ⚛️ **Tecnologías Utilizadas**
 
-### **🌐 Versión Vanilla (HTML + CSS + JS)**
-- **Ubicación**: Archivos en la raíz del proyecto
-- **Ejecución**: Abrir `index.html` en el navegador
-- **Ventajas**: 
-  - ✅ Sin dependencias externas
-  - ✅ Funciona offline
-  - ✅ Fácil de entender y modificar
-  - ✅ Compatible con cualquier navegador
-
-### **⚛️ Versión React (React + Hooks + Vite)**
-- **Ubicación**: Carpeta `react-version/`
-- **Ejecución**: `npm run dev` (puerto 3000)
-- **Ventajas**:
-  - ✅ Reactividad nativa automática
-  - ✅ Componentes modulares
-  - ✅ Mejor performance
-  - ✅ Herramientas de desarrollo avanzadas
-  - ✅ Código más mantenible
+- **React 18**: Biblioteca de UI con hooks modernos
+- **Vite**: Build tool rápido para desarrollo
+- **Custom Hooks**: `useGameState` para lógica del juego
+- **Bootstrap 5**: Framework CSS para diseño responsivo
+- **Font Awesome 6**: Iconografía moderna
+- **LocalStorage**: Persistencia de datos del juego
 
 ## 🛠️ **Instalación y Uso**
 
-### **Para la Versión Vanilla:**
-```bash
-# No requiere instalación
-# Simplemente abre index.html en tu navegador
-```
+### **Requisitos Previos**
+- Node.js (versión 16 o superior)
+- npm o yarn
 
-### **Para la Versión React:**
+### **Instalación**
 ```bash
-# Navegar a la carpeta React
-cd react-version
+# Clonar el repositorio
+git clone [URL_DEL_REPOSITORIO]
+cd plantilla-generador
 
 # Instalar dependencias
 npm install
@@ -90,12 +69,28 @@ npm run dev
 # http://localhost:3000
 ```
 
+### **Comandos Disponibles**
+```bash
+# Desarrollo
+npm run dev
+
+# Construir para producción
+npm run build
+
+# Preview de producción
+npm run preview
+
+# Linting
+npm run lint
+```
+
 ## 🎨 **Características de UX/UI**
 
 ### **Diseño Responsivo**
 - ✅ Adaptable a móviles y tablets
 - ✅ Interfaz oscura moderna
 - ✅ Animaciones suaves y feedback visual
+- ✅ Reactividad nativa automática
 
 ### **Accesibilidad (A11y)**
 - ✅ Navegación por teclado
@@ -118,7 +113,7 @@ npm run dev
 ## 🔧 **Configuración**
 
 ### **Archivo de Configuración**
-El juego es altamente configurable a través de `config.js` (Vanilla) o `src/utils/config.js` (React):
+El juego es altamente configurable a través de `src/utils/config.js`:
 
 - ✅ **Recursos**: Nombres, iconos, tasas de generación
 - ✅ **Instalaciones**: Costos, efectos, niveles máximos
@@ -150,28 +145,29 @@ El juego es altamente configurable a través de `config.js` (Vanilla) o `src/uti
     "stats": { "totalClicks": 150, "totalProduction": 5000 },
     "achievements": [ { "id": "first_click", "unlocked": true } ]
   },
-  "version": "2.0",
+  "version": "3.0",
   "saveTime": 1640995200000
 }
 ```
 
 ## 🚀 **Desarrollo**
 
-### **Ramas Git**
-- **`master`**: Versión vanilla estable
-- **`react-migration`**: Versión React completa
+### **Arquitectura React**
+- **Componentes Funcionales**: Uso de hooks modernos
+- **Custom Hook**: `useGameState` centraliza toda la lógica del juego
+- **Estado Reactivo**: Actualizaciones automáticas en tiempo real
+- **Performance Optimizada**: Memoización con `useCallback`
 
 ### **Comandos Útiles**
 ```bash
 # Ver estado del repositorio
 git status
 
-# Cambiar entre versiones
-git checkout master          # Versión vanilla
-git checkout react-migration # Versión React
+# Ver historial de commits
+git log --oneline
 
 # Ver diferencias
-git diff master react-migration
+git diff
 ```
 
 ## 🎯 **Estado Actual del Proyecto**
@@ -181,31 +177,33 @@ git diff master react-migration
 - ✅ **Sistema de Instalaciones**: 3 tipos con efectos específicos
 - ✅ **Sistema de Logros**: Condiciones dinámicas y persistencia
 - ✅ **Guardado Automático**: localStorage con versionado
-- ✅ **Migración React**: Reactividad nativa implementada
+- ✅ **Reactividad Nativa**: Actualizaciones automáticas
+- ✅ **Migración Completa**: Solo versión React optimizada
 - ✅ **Errores Corregidos**: achievement.condition y desbloqueo de recursos
-- ✅ **Control de Versiones**: Git con ramas organizadas
 
-### **🎮 Versiones Funcionando**
-- ✅ **Versión Vanilla**: Estable y funcional
-- ✅ **Versión React**: Reactiva y optimizada
-- ✅ **Compatibilidad**: Ambas versiones sincronizadas
+### **🎮 Versión Funcionando**
+- ✅ **Versión React**: Reactiva, optimizada y estable
+- ✅ **Performance**: Reactividad nativa sin recargas
+- ✅ **Compatibilidad**: Funciona en navegadores modernos
 
 ### **🔧 Problemas Resueltos Recientemente**
 - ✅ **Error de Logros**: `achievement.condition is not a function` - **SOLUCIONADO**
 - ✅ **Desbloqueo de Recursos**: Botones no se habilitaban - **SOLUCIONADO**
 - ✅ **Reactividad**: Actualizaciones en tiempo real - **IMPLEMENTADO**
 - ✅ **Persistencia**: Carga correcta desde localStorage - **CORREGIDO**
+- ✅ **Migración Limpia**: Eliminación de versión vanilla - **COMPLETADO**
 
 ### **📊 Métricas de Éxito**
 - ✅ **Funcionalidad**: 100% de características implementadas
 - ✅ **Estabilidad**: Sin errores críticos conocidos
-- ✅ **Performance**: Reactividad nativa en React
+- ✅ **Performance**: Reactividad nativa automática
 - ✅ **Compatibilidad**: Funciona en navegadores modernos
+- ✅ **Mantenibilidad**: Código React modular y limpio
 
 ## 🚀 **Próximos Pasos Planificados**
 
 ### **📋 Fase 1: Mejoras Inmediatas (Prioridad Alta)**
-- 🔧 **Testing Completo**: Verificar ambas versiones en diferentes navegadores
+- 🔧 **Testing Completo**: Verificar en diferentes navegadores
 - 📊 **Métricas de Performance**: Medir y optimizar tiempos de respuesta
 - 🐛 **Bug Fixes**: Identificar y corregir problemas menores
 - 📚 **Documentación Técnica**: Guías de desarrollo y API
@@ -232,6 +230,14 @@ git diff master react-migration
 - 🎯 **Misiones**: Objetivos específicos con recompensas
 
 ## 📝 **Changelog**
+
+### **v3.0.0 - Migración Completa a React**
+- ✅ **Migración Limpia**: Eliminación de versión vanilla
+- ✅ **Estructura Optimizada**: Solo versión React en raíz
+- ✅ **README Actualizado**: Documentación para versión única
+- ✅ **Control de Versiones**: Git organizado para React
+- ✅ **Performance**: Reactividad nativa automática
+- ✅ **Mantenibilidad**: Código modular y limpio
 
 ### **v2.0.1 - Correcciones y Mejoras**
 - ✅ **Fix**: Corregido error `achievement.condition is not a function`
@@ -272,10 +278,10 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 ## 🙏 **Agradecimientos**
 
+- **React**: Biblioteca de UI moderna
+- **Vite**: Herramienta de build rápida
 - **Bootstrap 5**: Framework CSS
 - **Font Awesome 6**: Iconografía
-- **React**: Biblioteca de UI
-- **Vite**: Herramienta de build
 - **Nielsen Heuristics**: Principios de UX
 
 ---
