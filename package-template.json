@@ -1,0 +1,20 @@
+{
+  "name": "snr-game-template",
+  "version": "1.0.0",
+  "description": "Template para crear juegos incrementales basados en SNR",
+  "main": "create-project.js",
+  "bin": {
+    "create-snr-game": "./create-project.js"
+  },
+  "keywords": [
+    "game",
+    "incremental",
+    "react",
+    "template",
+    "snr"
+  ],
+  "author": "Tu Nombre",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+} 
