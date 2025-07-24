@@ -53,7 +53,7 @@ const BaseResource = ({ gameState, onCollect, formatNumber }) => {
 };
 
 // Componente para recursos jerárquicos
-const HierarchicalResource = ({ resourceKey, resource, onUnlock, formatNumber }) => {
+const HierarchicalResource = ({ resourceKey, resource, onUnlock, formatNumber, baseResourceAmount }) => {
   const config = SNRConfig.resources[resourceKey];
   
   return (
@@ -79,10 +79,10 @@ const HierarchicalResource = ({ resourceKey, resource, onUnlock, formatNumber })
           {!resource.unlocked ? (
             <button
               className={`btn btn-${config.color} btn-unlock mt-auto ${
-                resource.amount >= config.unlockCost ? 'available' : ''
+                baseResourceAmount >= config.unlockCost ? 'available' : ''
               }`}
               onClick={() => onUnlock(resourceKey)}
-              disabled={resource.amount < config.unlockCost}
+              disabled={baseResourceAmount < config.unlockCost}
               data-tooltip={`Desbloquear ${config.name} por ${formatNumber(config.unlockCost)} MP`}
             >
               <i className="fas fa-lock me-2" aria-hidden="true"></i>
@@ -298,6 +298,7 @@ function App() {
               resource={resource}
               onUnlock={unlockResource}
               formatNumber={formatNumber}
+              baseResourceAmount={gameState.baseResource.amount}
             />
           ))}
         </div>

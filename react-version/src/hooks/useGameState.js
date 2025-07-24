@@ -130,7 +130,10 @@ export const useGameState = () => {
     const unlockResource = useCallback((resourceKey) => {
         setGameState(prev => {
             const resource = prev.resources[resourceKey];
-            if (!resource || resource.unlocked) return prev;
+            
+            if (!resource || resource.unlocked) {
+                return prev;
+            }
             
             if (prev.baseResource.amount >= resource.unlockCost) {
                 return {
