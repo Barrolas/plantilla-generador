@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Nivelación de Recursos (SNR) v2.0</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-dark text-light">
+    <!-- Header -->
+    <header class="container-fluid py-3 border-bottom border-secondary">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="h2 mb-0 text-primary">
+                    <i class="fas fa-cogs me-2" aria-hidden="true"></i>Sistema de Nivelación de Recursos v2.0
+                </h1>
+            </div>
+            <div class="col-md-6 text-end">
+                <div class="d-flex justify-content-end align-items-center">
+                    <button id="saveBtn" class="btn btn-outline-primary btn-sm me-2" 
+                            data-tooltip="Guardar progreso actual">
+                        <i class="fas fa-save" aria-hidden="true"></i> Guardar
+                    </button>
+                    <button id="resetBtn" class="btn btn-outline-danger btn-sm" 
+                            data-tooltip="Reiniciar juego (se perderá todo el progreso)">
+                        <i class="fas fa-redo" aria-hidden="true"></i> Reiniciar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Game Container -->
+    <main class="container-fluid py-4">
+        <!-- Game Stats Row -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-dark border-secondary">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <h6 class="text-muted">Tiempo Jugado</h6>
+                                <span id="playTime" class="h5 text-info">00:00:00</span>
+                            </div>
+                            <div class="col-md-3">
+                                <h6 class="text-muted">Clics Totales</h6>
+                                <span id="totalClicks" class="h5 text-warning">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <h6 class="text-muted">Nivel Máximo</h6>
+                                <span id="maxLevel" class="h5 text-success">1</span>
+                            </div>
+                            <div class="col-md-3">
+                                <h6 class="text-muted">Generación Total/seg</h6>
+                                <span id="totalGeneration" class="h5 text-primary">1.0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recurso Base -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card resource-panel bg-dark border-warning">
+                    <div class="card-header bg-warning bg-opacity-25 border-warning">
+                        <h4 class="mb-0">
+                            <i class="fas fa-cogs me-2" aria-hidden="true"></i>Materia Prima (MP) - Recurso Base
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-4 text-center">
+                                <div class="resource-count h1 text-warning" id="mp-count" 
+                                     data-tooltip="Cantidad actual de Materia Prima">0</div>
+                                <div class="text-muted">
+                                    <i class="fas fa-tachometer-alt me-1" aria-hidden="true"></i>
+                                    <span id="mp-rate">1.0</span> MP/seg
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <button id="mp-collect" class="btn btn-warning btn-lg btn-control" 
+                                        data-tooltip="Haz clic para recolectar Materia Prima manualmente">
+                                    <i class="fas fa-hand-point-up me-2" aria-hidden="true"></i>Recolectar MP
+                                </button>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="progress mb-2" style="height: 10px;" 
+                                     data-tooltip="Progreso de producción automática">
+                                    <div id="mp-progress" class="progress-bar bg-warning" style="width: 0%"></div>
+                                </div>
+                                <small class="text-muted">Progreso de producción</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instalaciones/Edificios -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-dark border-primary">
+                    <div class="card-header bg-primary bg-opacity-25 border-primary">
+                        <h5 class="mb-0">
+                            <i class="fas fa-industry me-2" aria-hidden="true"></i>Instalaciones y Mejoras
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Fábrica de Producción -->
+                            <div class="col-md-4 mb-3">
+                                <div class="card bg-dark border-primary h-100">
+                                    <div class="card-header bg-primary bg-opacity-25 border-primary">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-industry me-2" aria-hidden="true"></i>Fábrica de Producción
+                                        </h6>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <p class="text-muted small mb-3">Aumenta la producción de MP por segundo</p>
+                                        <div class="mb-3">
+                                            <span class="h4 text-primary">Nivel: </span>
+                                            <span id="production-level" class="h4 text-primary">0</span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <span class="text-muted">Costo: </span>
+                                            <span id="production-cost" class="text-warning">10</span>
+                                            <span class="text-muted"> MP</span>
+                                        </div>
+                                        <button id="upgrade-production" class="btn btn-primary w-100 btn-control" 
+                                                data-tooltip="Mejora la Fábrica de Producción para aumentar la generación automática">
+                                            <i class="fas fa-arrow-up me-2" aria-hidden="true"></i>Mejorar (10 MP)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Centro de Recolección -->
+                            <div class="col-md-4 mb-3">
+                                <div class="card bg-dark border-success h-100">
+                                    <div class="card-header bg-success bg-opacity-25 border-success">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-hand-point-up me-2" aria-hidden="true"></i>Centro de Recolección
+                                        </h6>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <p class="text-muted small mb-3">Aumenta la cantidad de MP por clic</p>
+                                        <div class="mb-3">
+                                            <span class="h4 text-success">Nivel: </span>
+                                            <span id="clicker-level" class="h4 text-success">0</span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <span class="text-muted">Costo: </span>
+                                            <span id="clicker-cost" class="text-warning">25</span>
+                                            <span class="text-muted"> MP</span>
+                                        </div>
+                                        <button id="upgrade-clicker" class="btn btn-success w-100 btn-control" 
+                                                data-tooltip="Mejora el Centro de Recolección para obtener más MP por clic">
+                                            <i class="fas fa-arrow-up me-2" aria-hidden="true"></i>Mejorar (25 MP)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sistema de Optimización -->
+                            <div class="col-md-4 mb-3">
+                                <div class="card bg-dark border-danger h-100">
+                                    <div class="card-header bg-danger bg-opacity-25 border-danger">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-rocket me-2" aria-hidden="true"></i>Sistema de Optimización
+                                        </h6>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <p class="text-muted small mb-3">Multiplica toda la producción</p>
+                                        <div class="mb-3">
+                                            <span class="h4 text-danger">Nivel: </span>
+                                            <span id="multiplier-level" class="h4 text-danger">0</span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <span class="text-muted">Costo: </span>
+                                            <span id="multiplier-cost" class="text-warning">100</span>
+                                            <span class="text-muted"> MP</span>
+                                        </div>
+                                        <button id="upgrade-multiplier" class="btn btn-danger w-100 btn-control" 
+                                                data-tooltip="Mejora el Sistema de Optimización para multiplicar toda la producción">
+                                            <i class="fas fa-arrow-up me-2" aria-hidden="true"></i>Mejorar (100 MP)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resource Panels -->
+        <div class="row">
+            <!-- Nivel 2: Componentes Ensamblados -->
+            <div class="col-lg-6 col-xl-4 mb-4">
+                <div id="ce-panel" class="card resource-panel bg-dark border-secondary locked-panel" style="display: none;">
+                    <div class="card-header bg-secondary bg-opacity-25 border-secondary">
+                        <h5 class="mb-0">
+                            <i class="fas fa-sliders-h me-2" aria-hidden="true"></i>Componentes Ensamblados (CE)
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <div class="resource-count h2 text-info" id="ce-count" 
+                                 data-tooltip="Cantidad actual de Componentes Ensamblados">0</div>
+                            <div class="text-muted">
+                                <i class="fas fa-tachometer-alt me-1" aria-hidden="true"></i>
+                                <span id="ce-rate">0.0</span> CE/seg
+                            </div>
+                        </div>
+                        <button id="ce-collect" class="btn btn-info btn-lg w-100 mb-3 btn-control" 
+                                data-tooltip="Haz clic para recolectar Componentes Ensamblados">
+                            <i class="fas fa-hand-point-up me-2" aria-hidden="true"></i>Recolectar CE (+1)
+                        </button>
+                        <div class="progress mb-2" style="height: 8px;">
+                            <div id="ce-progress" class="progress-bar bg-info" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="ce-unlock" class="card bg-dark border-secondary">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted mb-3">
+                            <i class="fas fa-lock me-2" aria-hidden="true"></i>Componentes Ensamblados
+                        </h6>
+                        <button id="unlock-ce" class="btn btn-secondary btn-lg w-100 btn-unlock" disabled
+                                data-tooltip="Gasta 100 MP para desbloquear Componentes Ensamblados">
+                            <i class="fas fa-lock me-2" aria-hidden="true"></i>Desbloquear CE (100 MP)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nivel 3: Unidades Complejas -->
+            <div class="col-lg-6 col-xl-4 mb-4">
+                <div id="uc-panel" class="card resource-panel bg-dark border-success locked-panel" style="display: none;">
+                    <div class="card-header bg-success bg-opacity-25 border-success">
+                        <h5 class="mb-0">
+                            <i class="fas fa-brain me-2" aria-hidden="true"></i>Unidades Complejas (UC)
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <div class="resource-count h2 text-success" id="uc-count" 
+                                 data-tooltip="Cantidad actual de Unidades Complejas">0</div>
+                            <div class="text-muted">
+                                <i class="fas fa-tachometer-alt me-1" aria-hidden="true"></i>
+                                <span id="uc-rate">0.0</span> UC/seg
+                            </div>
+                        </div>
+                        <button id="uc-collect" class="btn btn-success btn-lg w-100 mb-3 btn-control" 
+                                data-tooltip="Haz clic para recolectar Unidades Complejas">
+                            <i class="fas fa-hand-point-up me-2" aria-hidden="true"></i>Recolectar UC (+0.1)
+                        </button>
+                        <div class="progress mb-2" style="height: 8px;">
+                            <div id="uc-progress" class="progress-bar bg-success" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="uc-unlock" class="card bg-dark border-secondary">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted mb-3">
+                            <i class="fas fa-lock me-2" aria-hidden="true"></i>Unidades Complejas
+                        </h6>
+                        <button id="unlock-uc" class="btn btn-secondary btn-lg w-100 btn-unlock" disabled
+                                data-tooltip="Gasta 100 MP para desbloquear Unidades Complejas">
+                            <i class="fas fa-lock me-2" aria-hidden="true"></i>Desbloquear UC (100 MP)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nivel 4: Núcleos Sintéticos -->
+            <div class="col-lg-6 col-xl-4 mb-4">
+                <div id="ns-panel" class="card resource-panel bg-dark border-danger locked-panel" style="display: none;">
+                    <div class="card-header bg-danger bg-opacity-25 border-danger">
+                        <h5 class="mb-0">
+                            <i class="fas fa-atom me-2" aria-hidden="true"></i>Núcleos Sintéticos (NS)
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <div class="resource-count h2 text-danger" id="ns-count" 
+                                 data-tooltip="Cantidad actual de Núcleos Sintéticos">0</div>
+                            <div class="text-muted">
+                                <i class="fas fa-tachometer-alt me-1" aria-hidden="true"></i>
+                                <span id="ns-rate">0.0</span> NS/seg
+                            </div>
+                        </div>
+                        <button id="ns-collect" class="btn btn-danger btn-lg w-100 mb-3 btn-control" 
+                                data-tooltip="Haz clic para recolectar Núcleos Sintéticos">
+                            <i class="fas fa-hand-point-up me-2" aria-hidden="true"></i>Recolectar NS (+0.01)
+                        </button>
+                        <div class="progress mb-2" style="height: 8px;">
+                            <div id="ns-progress" class="progress-bar bg-danger" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="ns-unlock" class="card bg-dark border-secondary">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted mb-3">
+                            <i class="fas fa-lock me-2" aria-hidden="true"></i>Núcleos Sintéticos
+                        </h6>
+                        <button id="unlock-ns" class="btn btn-secondary btn-lg w-100 btn-unlock" disabled
+                                data-tooltip="Gasta 100 MP para desbloquear Núcleos Sintéticos">
+                            <i class="fas fa-lock me-2" aria-hidden="true"></i>Desbloquear NS (100 MP)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievement Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card bg-dark border-secondary">
+                    <div class="card-header bg-secondary bg-opacity-25 border-secondary">
+                        <h5 class="mb-0">
+                            <i class="fas fa-trophy me-2" aria-hidden="true"></i>Logros
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="achievements" class="row">
+                            <!-- Achievements will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="container-fluid py-3 border-top border-secondary">
+        <div class="row">
+            <div class="col-md-6">
+                <small class="text-muted">
+                    <i class="fas fa-code me-1" aria-hidden="true"></i>Plantilla SNR v2.0 - Sistema de Nivelación de Recursos
+                </small>
+            </div>
+            <div class="col-md-6 text-end">
+                <small class="text-muted">
+                    Versión 2.0 | <i class="fas fa-calendar me-1" aria-hidden="true"></i>2025
+                </small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/game.js"></script>
+</body>
+</html> 
