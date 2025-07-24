@@ -1,0 +1,59 @@
+/* Estilos específicos para la aplicación React */
+
+/* Mejoras de accesibilidad para React */
+[data-tooltip] {
+  position: relative;
+  cursor: help;
+}
+
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--darker-bg);
+  color: var(--text-light);
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 1000;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+/* Animaciones específicas para React */
+.resource-count {
+  transition: all 0.2s ease;
+}
+
+.resource-count:hover {
+  transform: scale(1.05);
+}
+
+/* Mejoras de contraste para React */
+.btn:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Estados de hover mejorados para React */
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px var(--shadow-color);
+}
+
+/* Responsive design para React */
+@media (max-width: 768px) {
+  .container-fluid {
+    padding: 0.5rem;
+  }
+  
+  .btn-lg {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+} 
