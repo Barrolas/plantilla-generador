@@ -93,7 +93,15 @@ export const useGameState = () => {
             if (savedData) {
                 const parsedData = JSON.parse(savedData);
                 if (parsedData.version === '2.0') {
-                    setGameState(parsedData.gameState);
+                    // Restaurar las funciones condition de los logros
+                    const loadedGameState = parsedData.gameState;
+                    if (loadedGameState.achievements) {
+                        loadedGameState.achievements = loadedGameState.achievements.map((achievement, index) => ({
+                            ...achievement,
+                            condition: SNRConfig.achievements[index]?.condition || (() => false)
+                        }));
+                    }
+                    setGameState(loadedGameState);
                     console.log('Juego cargado exitosamente');
                     return true;
                 }
